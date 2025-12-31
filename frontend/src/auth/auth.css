@@ -1,0 +1,26 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.auth-card {
+  background: white;
+  padding: 30px;
+  width: 300px;
+  border-radius: 8px;
+}
+.auth-card input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+}
+button {
+  width: 100%;
+  padding: 10px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor:pointer;
+}
+.error { color: red; }

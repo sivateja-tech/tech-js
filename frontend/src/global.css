@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f8fafc;
+}
+a { color: #2563eb; text-decoration: none; }
+/* =====================================
+   Cursor behavior for clickable elements
+===================================== */
+button,
+.btn,
+a.btn {
+  cursor: pointer;
+}

@@ -1,28 +1,41 @@
 import prisma from './prisma.js';
 
-// Save an answer
-export async function saveAnswer(submissionId, questionId, selectedOptionId, isCorrect) {
-  return await prisma.answer.create({
+/* =========================
+   SAVE ANSWER
+========================= */
+export async function saveAnswer(
+  submissionId,
+  questionId,
+  selectedOptionId
+) {
+  return await prisma.answers.create({
     data: {
       submission_id: submissionId,
       question_id: questionId,
-      selected_option_id: selectedOptionId,
-      is_correct: isCorrect,
-    },
+      selected_option_id: selectedOptionId
+      // is_correct is handled by DB trigger
+    }
   });
 }
 
-// Get all answers for a submission
+/* =========================
+   GET ANSWERS BY SUBMISSION
+========================= */
 export async function getAnswersBySubmission(submissionId) {
-  return await prisma.answer.findMany({   // should be singular "answer", not "answers"
+  return await prisma.answers.findMany({
     where: { submission_id: submissionId },
-    include: { questions: true, options: true },
+    include: {
+      questions: true,
+      options: true
+    }
   });
 }
 
-// Get submission by ID (needed in answerController)
+/* =========================
+   GET SUBMISSION BY ID
+========================= */
 export async function getSubmissionByIdQuiz(submissionId) {
-  return await prisma.submission.findUnique({
-    where: { id: submissionId },
+  return await prisma.submissions.findMany({
+    where: { id: submissionId }
   });
 }

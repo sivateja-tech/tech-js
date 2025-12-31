@@ -4,27 +4,48 @@ import { authenticate, authorizeRole } from '../middlewares/auth.js';
 
 const router = express.Router();
 
+/* =========================
+   AUTH ROUTES
+========================= */
 
-router.post('/signup', signup);
-router.post('/login', login);
+/* SIGNUP */
+router.post('/signup', async (req, res, next) => {
+  try {
+    await signup(req, res);
+  } catch (error) {
+    next(error);
+  }
+});
 
+/* LOGIN */
+router.post('/login', async (req, res, next) => {
+  try {
+    await login(req, res);
+  } catch (error) {
+    next(error);
+  }
+});
 
+/* CURRENT LOGGED-IN USER */
 router.get('/me', authenticate, (req, res) => {
-  res.json({
-    message: 'Hello ' + req.user.email,
+  res.status(200).json({
+    success: true,
+    message: 'User profile fetched successfully',
     user: req.user
   });
 });
 
-
+/* ADMIN ONLY ROUTE */
 router.get(
   '/admin',
   authenticate,
   authorizeRole('admin'),
   (req, res) => {
-    res.json({ secret: "admin's only" });
+    res.status(200).json({
+      success: true,
+      message: "Admin access granted"
+    });
   }
 );
 
 export default router;
-

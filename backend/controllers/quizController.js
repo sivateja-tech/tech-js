@@ -1,29 +1,114 @@
-import { createQuiz, getQuizById, getAllQuizzes } from '../models/quizModel.js';
+import {
+  createQuiz,
+  getQuizById,
+  getAllQuizzes
+} from '../models/quizModel.js';
 
-export async function handlecreateQuiz(req, res) {
+/* =========================
+   CREATE QUIZ
+========================= */
+export async function handleCreateQuiz(req, res) {
   try {
-    const quiz = await createQuiz(req.body);
-    res.status(201).json(quiz);
+    const { title, description } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ success: false, error: "Title is required" });
+    }
+
+    const quiz = await createQuiz({
+      title,
+      description,
+      created_by: req.user.id
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: quiz
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 }
 
+
+/* =========================
+   GET QUIZ BY ID
+========================= */
 export async function handlegetQuizById(req, res) {
   try {
-    const quiz = await getQuizById(Number(req.params.id));
-    if (!quiz) return res.status(404).json({ error: "page not found" });
-    res.json(quiz);
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid quiz id'
+      });
+    }
+
+    const quiz = await getQuizById(id);
+
+    if (!quiz) {
+      return res.status(404).json({
+        success: false,
+        error: 'Quiz not found'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: quiz
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 }
 
+/* =========================
+   GET ALL QUIZZES
+========================= */
 export async function handlegetAllQuizzes(req, res) {
   try {
-    const quiz = await getAllQuizzes();
-    res.json(quiz);
+    const quizzes = await getAllQuizzes();
+
+    return res.status(200).json({
+      success: true,
+      count: quizzes.length,
+      data: quizzes
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 }
+export async function handleDeleteQuiz(req, res) {
+  try {
+    const quizId = Number(req.params.id);
+
+    if (!quizId) {
+      return res.status(400).json({ error: "Invalid quiz id" });
+    }
+
+    await prisma.quizzes.delete({
+      where: { id: quizId }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz deleted successfully"
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+}
+

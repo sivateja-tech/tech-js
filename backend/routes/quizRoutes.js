@@ -1,26 +1,30 @@
-import express from 'express';
+import express from "express";
 import {
-  handlecreateQuiz,
+  handleCreateQuiz,
   handlegetQuizById,
   handlegetAllQuizzes
-} from '../controllers/quizController.js';
+} from "../controllers/quizController.js";
 
-import { authenticate, authorizeRole } from '../middlewares/auth.js';
+import { authenticate, authorizeRole } from "../middlewares/auth.js";
+import { handleDeleteQuiz } from "../controllers/quizController.js";
 
 const router = express.Router();
 
-
 router.post(
-  '/',
+  "/",
   authenticate,
-  authorizeRole('admin'),
-  handlecreateQuiz
+  authorizeRole("admin"),
+  handleCreateQuiz
 );
 
-router.get('/', handlegetAllQuizzes);
+router.get("/:id", handlegetQuizById);
+router.get("/", handlegetAllQuizzes);
+router.delete(
+  "/:id",
+  authenticate,
+  authorizeRole("admin"),
+  handleDeleteQuiz
+);
 
-
-router.get('/:id', handlegetQuizById);
 
 export default router;
-

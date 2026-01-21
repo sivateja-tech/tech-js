@@ -53,5 +53,5 @@ Validated **15+ RESTful endpoints** using Postman, including:
 
 1. **Clone the Repo:**
    ```bash
-   git clone [https://github.com/sivateja-tech/quiz-management-system.git](https://github.com/sivateja-tech/quiz-management-system.git)
+   git clone [https://github.com/sivateja-tech/tech-js.git](https://github.com/sivateja-tech/tech-js.git)
    
